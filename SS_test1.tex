@@ -1,0 +1,441 @@
+\documentclass[UTF8]{ctexart}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\usepackage[colorlinks=true]{hyperref}
+
+\usepackage{listings}
+\lstset{
+language=Matlab,
+escapeinside=``, 
+numbers=left,
+numberstyle=\tiny,
+breaklines=true, 
+backgroundcolor=\color{lightgray!40!white},
+frame=single,
+framerule=0pt,
+extendedchars=false, 
+keywordstyle=\color{blue!70}\bfseries, 
+basicstyle=\ttfamily,
+commentstyle=\ttfamily\color{green!40!black}, 
+showstringspaces=false}
+
+\usepackage{xcolor}
+%\usepackage{fontspec}
+%\setmonofont{Consolas}
+
+\usepackage{geometry}
+\geometry{papersize={21cm,29.7cm}}
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{lmodern}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\rhead{信号与系统-实验报告}
+\lhead{实验1}
+\cfoot{\thepage}
+
+
+\begin{document}
+
+
+\begin{titlepage}
+
+	\vspace*{0.5cm}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\linewidth]{logo}
+	\end{figure}
+
+	\vspace*{1.0cm}
+	
+	\begin{center}
+		\fontsize{45pt}{0}\textbf{实验报告（本科）} \\
+		\vspace*{1cm}
+		\Huge{\textbf{——信号与系统课程}}
+	\end{center}
+	
+	\vspace*{2.0cm}
+	
+	\begin{center}
+		\LARGE 学\qquad号：\ \underline{\makebox[200pt]{2018141231122}} \\
+		\LARGE 姓\qquad名：\ \underline{\makebox[200pt]{乔佳龙}} \\
+		\LARGE 专\qquad业：\ \underline{\makebox[200pt]{自动化}} \\
+		\LARGE 日\qquad期：\ \underline{\makebox[200pt]{2020年3月22日}} \\
+		\LARGE 实验题目：\ \underline{\makebox[200pt]{线性时不变系统}} \\
+		\LARGE 实验内容：\ \underline{\makebox[200pt][l]{信号的产生（sin, square,}}\\
+		\underline{\makebox[296pt][l]{sinc, exp，sawtooth），波形的绘制和}} \\
+		\underline{\makebox[296pt][l]{分析，卷积的计算。}} \\
+%		\underline{\makebox[296pt][l]{}} \\
+%		\underline{\makebox[296pt][l]{}} \\
+%		\underline{\makebox[296pt][l]{}} \\
+	\end{center}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+
+\newpage
+%1
+\section{理论计算}
+%1.1
+\subsection[第3题（1）]{第3题（1）求\texorpdfstring{$x_1(t)=1.5e^{-2t}u(t)$}{x1}，\texorpdfstring{$x_2(t)=cos(t2)[u(t)-u(t-2)]$}{x2}的卷积积分\texorpdfstring{$y_1(t)=x_1(t)*x_2(t)$}{y1}。 }
+\begin{align}
+y_1(t)
+& =\int_{-\infty}^{+\infty}x_2(\tau)x_1(t-\tau)\mathrm{d}\tau \\
+& =\int_{-\infty}^{+\infty}\cos(2\tau)[u(\tau)-u(\tau -2)]\times1.5\times e^{-2(t-\tau)}u(t-\tau)\mathrm{d}\tau \\
+& =\int_{0}^{2}1.5\times \cos(2\tau)e^{-2(t-\tau)}u(t-\tau) \mathrm{d}\tau \\
+& = \begin{cases}
+	0,\ t\leq0 \\
+	\int_{0}^{t}1.5\times \cos(2\tau)e^{-2(t-\tau)}\mathrm{d}\tau,\ 0 < t < 2 \\
+	\int_{0}^{2}1.5\times \cos(2\tau)e^{-2(t-\tau)}\mathrm{d}\tau,\ t \geq2
+	\end{cases} \\
+& = \begin{cases}
+	0,\ t\leq0 \\
+	\frac{3}{8}[\sin(2t)+\cos(2t)-e^{-2t}], \ 0 < t < 2 \\
+	\frac{3}{8}[(\sin(4)+\cos(4))e^{4-2t}-e^{-2t}], \ t \geq 2
+	\end{cases}
+\end{align}
+
+%1.2
+\subsection[第3题（2）]{第三题（2）求\texorpdfstring{$x_3[n]=(-\frac{2}{3})^n u[n-1]$}{x3}，\texorpdfstring{$x_4[n]=(-1)^{n+1}u[n-1]-(-2)^{n-2}u[n-2]$}{x4}的卷积和\texorpdfstring{$y_2[n]
+=x_3[n]*x_4[n]$}{y2}}
+\begin{align}
+y_2[n]
+&=x_3[n]*x_4[n] \\
+&=((-\frac{2}{3})^n u[n-1])*((-1)^{n+1}u[n-1]-(-2)^{n-2}u[n-2]) \\
+&=\sum_{k=-\infty}^{+\infty}(-\frac{2}{3})^k u[k-1]((-1)^{n-k+1}u[n-k+1]-(-2)^{n-k-2}u[n-k-2]) \\
+&=\sum_{k=1}^{+\infty}(-\frac{2}{3})^k ((-1)^{n-k+1}u[n-k+1]-(-2)^{n-k-2}u[n-k-2]) \\
+&=
+\begin{cases}
+	0, \ n<0 \\
+	\sum_{k=1}^{+\infty}(-\frac{2}{3})^k (-1)^{n-k+1}u[n-k+1], \ 0 \leq n \leq 2 \\
+	\sum_{k=1}^{+\infty}(-\frac{2}{3})^k ((-1)^{n-k+1}u[n-k+1]-(-2)^{n-k-2}u[n-k-2]),\ n>2
+\end{cases}
+\end{align}
+\paragraph{
+所以，代入可求得以下结果：
+}
+\begin{align}
+y_2[0]&=-\frac{2}{3} \\
+y_2[1]&=\frac{10}{9} \\
+y_2[2]&=-\frac{37}{27} \\
+y_2[3]&=\frac{184}{81}
+\end{align}
+
+
+
+\newpage
+%2
+\section{仿真结果（程序、时域图、频域图）}
+%2.1
+\subsection{第1题}
+\subsubsection{程序}
+\begin{lstlisting}
+%range of independent variable t
+t=-4:0.001:4;
+
+%sine function
+subplot(3,2,1)
+x1=sin(pi.*t);
+plot(t,x1,'Color','\#0072BD','LineWidth',1)
+title('sin function: $$ x_1=\sin(\pi t) $$','Interpreter','latex')
+xlim([-5,5])
+xticks(-5:1:5)
+yticks(-1:0.5:1)
+xlabel('t')
+ylabel('$$x_1$$','Interpreter','latex')
+grid on
+
+%sinc function
+subplot(3,2,2)
+x2=sinc(pi*t);
+plot(t,x2,'Color','\#0072BD','LineWidth',1)
+title('sinc function: $$ x_2=\mathrm{sinc}(\pi t) $$','Interpreter','latex')
+xlim([-5,5])
+xticks(-5:1:5)
+grid on
+
+%imaginary exponent signal
+subplot(3,2,3)
+x3=exp(-1i*pi*t);
+plot(t,x3,'Color','\#77AC30','LineWidth',1)
+title('$$ x_3=e^{-i \pi t} $$','Interpreter','latex')
+xlim([-5,5])
+xticks(-5:1:5)
+grid on
+
+%real exponent signal
+subplot(3,2,4)
+x4=exp(-t);
+plot(t,x4,'Color','\#77AC30','LineWidth',1)
+title('$$x_4=e^{-t}$$','Interpreter','latex')
+xlim([-5,5])
+xticks(-5:1:5)
+grid on
+
+%square wave signal(T: 2, duty circle: 30%, amplitude: +1.5/-1.5)
+subplot(3,2,5)
+x5=1.5*square(2*t,30);
+plot(t,x5,'Color','\#A2142F','LineWidth',1)
+title('Square wave signal(T = 2, duty circle = 30%, amplidute = +1.5/-1.5)')
+xlim([-5,5])
+xticks(-5:1:5)
+grid on
+
+%Triangular wave (T: 1, amplitude: 1)
+subplot(3,2,6)
+x6=sawtooth(2*pi*t,0.8);
+plot(t,x6,'Color','\#A2142F','LineWidth',1)
+title('Triangular wave (T = 1, amplitude = 1)')
+xlim([-5,5])
+xticks(-5:1:5)
+grid on
+\end{lstlisting}
+
+\subsubsection{时域图}
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\linewidth]{signal1}
+\end{figure}
+
+%2.2
+\subsection{第2题（1）}
+\subsubsection{程序}
+\begin{lstlisting}
+clc
+clear
+close all
+
+%range of independent variable t
+t=-10:0.001:10;
+
+%x(t)
+x1=sinc((1/pi)*t);
+plot(t,x1,'Color','\#0072BD','LineWidth',1)
+xlim([-12,12])
+ylim([-0.4,1.2])
+xlabel('t')
+grid on
+title('Comparison of $$x(t)\ and \ x(-t+2)$$','Interpreter','latex')
+
+hold on
+
+%x(-t+2)
+x2=sinc((1/pi)*(-t+2));
+plot(t,x2,'Color','\#D95319','LineWidth',1)
+
+%legend
+legend('$$\mathrm{sinc}(\frac{t}{\pi})$$','$$\mathrm{sinc}(\frac{-t+2}{\pi})$$','Interpreter','latex')
+\end{lstlisting}
+\subsubsection{时域图}
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\linewidth]{signal2_1}
+\end{figure}
+
+%2.3
+\subsection{第2题（2）}
+\subsubsection{程序}
+\begin{lstlisting}
+clc
+clear
+close all
+%2-2
+
+%x_N[n]
+subplot(2,1,1)
+x1=linspace(-5,9,15);
+y1=[0.5,1.5,2,1,0, 0.5,1.5,2,1,0, 0.5,1.5,2,1,0,];
+stem(x1,y1,'filled','LineWidth',1)
+title('$$X_N[n]; \ N=5$$','Interpreter','latex')
+xlim([-5,10])
+ylim([0,2.5])
+xticks(-5:1:10)
+grid on
+
+%x_N[-n]
+subplot(2,1,2)
+x2=linspace(-4,10,15);
+y2=[0,1,2,1.5,0.5, 0,1,2,1.5,0.5, 0,1,2,1.5,0.5,];
+stem(x2,y2,'filled','LineWidth',1,'MarkerEdgeColor','r')
+title('$$X_N[-n]; \ N=5$$','Interpreter','latex')
+xlim([-5,10])
+ylim([0,2.5])
+xticks(-5:1:10)
+grid on
+\end{lstlisting}
+\subsubsection{时域图}
+\newpage
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\linewidth]{signal2_2}
+\end{figure}
+
+%2.4
+\subsection{第3题}
+\subsubsection{程序}
+\begin{lstlisting}
+clc
+clear
+close all
+
+%convolution y1(t)
+%range of independent variable t0 of x1(t) and x2(t)
+t0 = -5:0.1:5;
+%x1(t)
+subplot(2,3,1)
+x1 = 1.5*exp(-2*t0).*stepfun(t0,0);
+plot(t0,x1,'LineWidth',1,'Color','\#0072BD')
+title('$$x_1(t)=1.5 e^{-2t}u(t)$$','Interpreter','latex')
+xlabel('$$t$$','Interpreter','latex')
+xticks(-5:1:5)
+grid on
+
+%x2(t)
+subplot(2,3,2)
+x2 = cos(2*t0).*(stepfun(t0,0)-stepfun(t0,2));
+plot(t0,x2,'LineWidth',1,'Color','\#7E2F8E')
+title('$$x_2(t)=\cos(2t)[u(t)-u(t-2)]$$','Interpreter','latex')
+xlabel('$$t$$','Interpreter','latex')
+xticks(-5:1:5)
+grid on
+
+%y1(t)
+%range of independent variable t1 of y1(t)
+t1 = -10:0.1:10;
+
+subplot(2,3,3)
+y1 = conv(x1,x2);
+plot(t1,y1,'LineWidth',1,'Color','\#A2142F')
+title('$$y_1(t)=x_1(t)*x_2(t)$$','Interpreter','latex')
+xlabel('$$t$$','Interpreter','latex')
+xticks(-10:1:10)
+grid on
+hold on
+
+
+%convolution y2[n]
+%range of independent variable n0 of x3[n] and x4[n]
+n0=-4:1:6;
+
+%x3[n]
+subplot(2,3,4)
+x3 = ((-2/3).^n0).*stepfun(n0,1);
+stem(n0,x3,'filled','LineWidth',1,'Color','\#0072BD')
+title('$$x_3[n]=(-\frac{2}{3})^n u[n-1]$$','Interpreter','latex')
+xlabel('$$n$$','Interpreter','latex')
+xlim([-5,7])
+xticks(-5:1:7)
+grid on
+
+%x4[n]
+subplot(2,3,5)
+x4 = (-1).^(n0+1).*stepfun(n0,-1)-((-2).^(n0-2)).*stepfun(n0,2);
+stem(n0,x4,'filled','LineWidth',1,'Color','\#7E2F8E')
+title('$$x_4[n]=(-1)^{n+1}u[n-1]-(-2)^{n-2}u[n-2]$$','Interpreter','latex')
+xlabel('$$n$$','Interpreter','latex')
+xlim([-5,7])
+xticks(-5:1:7)
+grid on
+
+%y2[n]
+%range of independent variable n1 of y2[n]
+ly2 = 2.*n0(1);
+hy2 = 2.*n0(end);
+n1 = ly2:1:hy2;
+
+subplot(2,3,6)
+y2 = conv(x3,x4);
+stem(n1,y2,'filled','LineWidth',1,'Color','\#A2142F')
+title('$$y_2[n]=x_3[n]*x_4[n]$$','Interpreter','latex')
+xlabel('$$n$$','Interpreter','latex')
+xlim([-9,13])
+xticks(-9:1:13)
+grid on
+\end{lstlisting}
+\subsubsection{时序图}
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\linewidth]{signal3}
+\end{figure}
+
+
+\newpage
+%3
+\section{结果分析及问题回答}
+%3.1
+\subsection{第2题（1）}
+\paragraph{
+二者的相位相差2。因为$sinc(t)$函数是一个偶函数，将其沿y轴变换为$sinc(-t)$时波形不变，与原函数保持一致，所以二者只是存在大小为2的相位差。
+}
+\subsection{第2题（2）}
+\paragraph{
+两图像的周期和自变量的取值范围时相同的，区别是每个周期内各自变量处的取值顺序不同，将第一幅图中每个周期内的图像都进行反转即可得到第二幅图。这也及将第一幅图沿y轴变换后得到的结果。
+}
+\subsection{第3题（1）}
+\paragraph{
+Matlab中的conv(a,b)函数是通过两个向量a、b计算卷积的，因此如果要计算连续函数的卷积，就需要将函数的自变量区间划分为很小的区间，这样就能计算得到连续函数的卷积。但是，我发现一些问题，对自变量取不同的小区间宽度时得到的结果并不相同，如下所示，这个问题还未解决，存在疑惑。
+}
+\subsection{第3题（2）}
+\paragraph{
+从第一部分的理论计算中我们可以得到以下函数值：
+}
+\begin{align}
+y_2[0]&=-\frac{2}{3} \\
+y_2[1]&=\frac{10}{9} \\
+y_2[2]&=-\frac{37}{27} \\
+y_2[3]&=\frac{184}{81}
+\end{align}
+\paragraph{
+而使用用数学工具Matlab仿真得到的结果如图上图所示，二者相等，所以仿真结果正确。
+}
+\begin{figure}[h]
+\centering
+\includegraphics[width=1\linewidth]{signal3_2}
+\end{figure}
+
+
+\newpage
+%4
+\section{调试分析及总结}
+\subsection{程序调试分析}
+
+\subsubsection{问题1：conv(a,b)函数的使用}
+最初在使用conv函数的结果y与自变量t作图时经常会出现以下的报错：
+\begin{lstlisting}
+Error using plot
+Vectors must be the same length.
+\end{lstlisting}
+通过查阅Matlab文档发现，使用conv(a,b)函数求得的卷积结果的向量长度发生了变化，长度变为了a的长度加上b的长度再减1，所以在作卷积结果图时需要对自变量的范围做出更改，将原函数自变量的最小值和最大值都乘以2即可。
+
+\subsubsection{问题2：m程序编写的顺序}
+最初写作图的plot函数和相关参数设置语句时没有注意程序的先后顺序，以下面的程序为例：
+\begin{lstlisting}
+subplot(2,3,1)
+x1 = 1.5*exp(-2*t0).*stepfun(t0,0);
+title('$$x_1(t)=1.5 e^{-2t}u(t)$$','Interpreter','latex')
+xlabel('$$t$$','Interpreter','latex')
+xticks(-5:1:5)
+grid on
+plot(t0,x1,'LineWidth',1,'Color','\#0072BD')
+\end{lstlisting}
+该程序中将title、xlabel、grid on等控制图的参数的语句写在了plot函数的前面，导致这些参数设置无法在图中显示。解决方法时将这些语句放在plot函数后即可。以后写程序过程中需要注意顺序，以免再发生这种问题。
+
+\subsubsection{
+其他：第一次调试LaTex程序中发现的问题
+}
+这部分内容我写在了自己的博客中。
+
+
+\subsection{总结}
+\paragraph{
+\quad 这是信号与系统课程的第一次实验，主要是来学习Matlab的基本操作内容，以及计算线性时不变系统中的卷积，通过理论计算和使用软件仿真来实现。实验中主要存在的问题有：\\
+\\
+1.对于Matlab软件的基本操作和一些基本的函数内容不熟悉，导致编写程序的过程中经常出错。需要多查询Matlab的官方文档，并且通过实验逐渐熟悉常用的内容。 \\
+\\
+2.实验顺序的问题。这次实验我没有先进行理论计算再进行软件仿真，导致刚开始并没有发现隐含的一些问题，最后需要反反复复地重复。所以在今后的实验中在仿真前要先进行理论计算，做到心中有数，对仿真的结果有一个预期，这样才能达到更好的效果。
+}
+\end{document}
